@@ -1,0 +1,391 @@
+campaign = 
+{
+    ["directory"] = "F:\\Enemy Within NEW COMPLETE\\",
+    ["startStage"] = 1,
+    ["picture"] = "Picture Start complete.jpg",
+    ["necessaryUnits"] = 
+    {
+        ["A-10C"] = "A-10C",
+    }, -- end of ["necessaryUnits"]
+    ["pictureFailed"] = "Picture End.png",
+    ["pictureSuccess"] = "Picture End.png",
+    ["name"] = "The Enemy Within",
+    ["description"] = "Fall 2014: Georgia is granted NATO Membership Action Plan at the summit in Wales. \
+\
+November 2014: Russian Ambassador to NATO, Aleksandr Grushko, warns that any expansion of the Alliance to the East will be seen as a direct threat to Russia. \
+\
+Suicide bomber kills 45 people and wounds 112 during a concert in Freedom Square in Tblisi. A previously unknown organisation calling itself 'Caucaus Liberation Army (CLA)' claims responsibility for the attack. \
+\
+December 2014: Two bombs explode during a friendly football match between Georgia and Armenia in Tblisi, attended by the presidents of both nations. 24 people are killed, at least 50 wounded. CLA warns that this is just the beginning of their campaign, though refuses to state its goals. \
+\
+January 2015: Russia strengthens its forces in North Caucasus in response to the \"imminent terrorist threat\", claiming links between CLA and the Caucasus Emirate. \
+\
+A few rockets are shot at Georgian military base in the north of the country. 3 soldiers are wounded. \
+\
+February 2015: another two CLA attacks claim lives of 25 people. Georgian authorities ask NATO for assistance. \
+\
+March: Georgian Mi8 is shot down in the mountains north of Tblisi. Georgian military claim that the terrorists are establishing bases near the border with Abkhazia and South Ossetia. Border Police arrests more than 100 illegal immigrants trying to enter the country from Azerbaijan, Russia and Armenia, some of them of Lebanese origin, many carrying weapons and explosives. \
+\
+Without official NATO decision being taken, US President decides to support the Georgians with the squadron of A10C's from the 74th Flying Tigers. 8 planes are scheduled to land in Kobuleti Airbase on March 29th. \
+\
+***\
+This is the first stage of a longer campaign, where player lands in Georgia as a part of small US Airforce detachment. The campaign is focused on realism and does not involve huge air or land battles - the main enemy being lightly armed terrorists and insurgents. However it offers 7 varied missions with a continous storyline, evolving situation and full voiceovers. ",
+    ["fullPath"] = "F:\\Enemy Within NEW COMPLETE\\Enemy within complete.cmp",
+    ["stages"] = 
+    {
+        [11] = 
+        {
+            ["name"] = "Stage 11",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "S11M1 Odessa.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S11M1 Odessa.miz",
+                }, -- end of [1]
+            }, -- end of ["missions"]
+        }, -- end of [11]
+        [13] = 
+        {
+            ["name"] = "Stage 13",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 50,
+                    }, -- end of ["interval"]
+                    ["file"] = "S13M1 OP Thunderstorm.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S13M1 OP Thunderstorm.miz",
+                }, -- end of [1]
+                [2] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 50,
+                    }, -- end of ["interval"]
+                    ["file"] = "S13M2 Leave 2.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S13M2 Leave 2.miz",
+                }, -- end of [2]
+                [4] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 53,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "S13M1 OP Thunderstorm.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S13M1 OP Thunderstorm.miz",
+                }, -- end of [4]
+                [3] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 51,
+                        [2] = 52,
+                    }, -- end of ["interval"]
+                    ["file"] = "S13M2 Leave 2.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S13M2 Leave 2.miz",
+                }, -- end of [3]
+            }, -- end of ["missions"]
+        }, -- end of [13]
+        [7] = 
+        {
+            ["name"] = "Stage 7",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "Enemy Within 7-1 A storm before the calm full.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\Enemy Within 7-1 A storm before the calm full.miz",
+                }, -- end of [1]
+            }, -- end of ["missions"]
+        }, -- end of [7]
+        [1] = 
+        {
+            ["name"] = "Stage 1",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "Enemy Within 1-1 Welcome to Georgia.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\Enemy Within 1-1 Welcome to Georgia.miz",
+                }, -- end of [1]
+            }, -- end of ["missions"]
+        }, -- end of [1]
+        [2] = 
+        {
+            ["name"] = "Stage 2",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "Enemy Within 2-1 Restoring Hope.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\Enemy Within 2-1 Restoring Hope.miz",
+                }, -- end of [1]
+            }, -- end of ["missions"]
+        }, -- end of [2]
+        [15] = 
+        {
+            ["name"] = "Stage 15",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "S15M1 the last tank.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S15M1 the last tank.miz",
+                }, -- end of [1]
+            }, -- end of ["missions"]
+        }, -- end of [15]
+        [8] = 
+        {
+            ["name"] = "Stage 8",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "S8 M1 The Falcons and the Hogs.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S8 M1 The Falcons and the Hogs.miz",
+                }, -- end of [1]
+            }, -- end of ["missions"]
+        }, -- end of [8]
+        [16] = 
+        {
+            ["name"] = "Stage 16",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "S16M1 Attack.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S16M1 Attack.miz",
+                }, -- end of [1]
+            }, -- end of ["missions"]
+        }, -- end of [16]
+        [9] = 
+        {
+            ["name"] = "Stage 9",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "S9 M1 Scramble.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S9 M1 Scramble.miz",
+                }, -- end of [1]
+            }, -- end of ["missions"]
+        }, -- end of [9]
+        [5] = 
+        {
+            ["name"] = "Stage 5",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "Enemy Within 5-1 OP Hammerfall 2.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\Enemy Within 5-1 OP Hammerfall 2.miz",
+                }, -- end of [1]
+            }, -- end of ["missions"]
+        }, -- end of [5]
+        [10] = 
+        {
+            ["name"] = "Stage 10",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 50,
+                    }, -- end of ["interval"]
+                    ["file"] = "S10 M1 Prisoners.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S10 M1 Prisoners.miz",
+                }, -- end of [1]
+                [2] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 50,
+                    }, -- end of ["interval"]
+                    ["file"] = "S10M2 Minebusters.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S10M2 Minebusters.miz",
+                }, -- end of [2]
+                [4] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 71,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "S10 M1 Prisoners.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S10 M1 Prisoners.miz",
+                }, -- end of [4]
+                [3] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 51,
+                        [2] = 70,
+                    }, -- end of ["interval"]
+                    ["file"] = "S10M2 Minebusters.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S10M2 Minebusters.miz",
+                }, -- end of [3]
+            }, -- end of ["missions"]
+        }, -- end of [10]
+        [14] = 
+        {
+            ["name"] = "Stage 14",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "S14M1 Training.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S14M1 Training.miz",
+                }, -- end of [1]
+            }, -- end of ["missions"]
+        }, -- end of [14]
+        [3] = 
+        {
+            ["name"] = "Stage 3",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "Enemy Within 3-1 Patrol near the border.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\Enemy Within 3-1 Patrol near the border.miz",
+                }, -- end of [1]
+            }, -- end of ["missions"]
+        }, -- end of [3]
+        [6] = 
+        {
+            ["name"] = "Stage 6",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "Enemy Within 6-1 Operation Hammerfall 3.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\Enemy Within 6-1 Operation Hammerfall 3.miz",
+                }, -- end of [1]
+            }, -- end of ["missions"]
+        }, -- end of [6]
+        [12] = 
+        {
+            ["name"] = "Stage 12",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "S12M1 Leave 1.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\S12M1 Leave 1.miz",
+                }, -- end of [1]
+            }, -- end of ["missions"]
+        }, -- end of [12]
+        [4] = 
+        {
+            ["name"] = "Stage 4",
+            ["missions"] = 
+            {
+                [1] = 
+                {
+                    ["interval"] = 
+                    {
+                        [1] = 0,
+                        [2] = 100,
+                    }, -- end of ["interval"]
+                    ["file"] = "Enemy Within 4-1 Operation Hammerfall.miz",
+                    ["description"] = "",
+                    ["fullpath"] = "F:\\Enemy Within NEW COMPLETE\\Enemy Within 4-1 Operation Hammerfall.miz",
+                }, -- end of [1]
+            }, -- end of ["missions"]
+        }, -- end of [4]
+    }, -- end of ["stages"]
+} -- end of campaign
