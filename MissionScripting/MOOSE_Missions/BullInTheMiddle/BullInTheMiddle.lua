@@ -5,7 +5,7 @@ Red_AirplaneTemplate = { "AI_Su-27", "AI_Su-33", "AI_Mig-23", "AI_Mig-29" }
 Red_AirplaneSpawner = SPAWN:New( "Red_Aircraft" )
 :InitLimit( 20, 10 )
 :InitRandomizeTemplate(Red_AirplaneTemplate)
-:InitRandomizePosition( true , 75000, 74000 )
+:InitRandomizePosition( true , 75000, 37000 )
 
 Blue_AirplaneTemplate = { "AI_AV-8B", "AI_F-14A", "AI_F-15C", "AI_F-16C" }
 Blue_AirplaneSpawner = SPAWN:New( "Blue_Aircraft" )
@@ -13,12 +13,15 @@ Blue_AirplaneSpawner = SPAWN:New( "Blue_Aircraft" )
 :InitRandomizeTemplate(Blue_AirplaneTemplate)
 :InitRandomizePosition( true , 74000, 37000 )
 
-Red_GroundTemplate = { "AI_SA-19" }
+Red_GroundTemplate = { "AI_SA-19", "AI_ZU-23", "AI_SA-13", "AI_SA-15", "AI_SA-8", "AI_SA-9" }
 Red_GroundSpawner = SPAWN:New( "Red_Ground" )
 :InitLimit( 20, 10 )
 :InitRandomizeTemplate(Red_GroundTemplate)
-:InitRandomizeRoute( 1, 1, 20000 )
-:InitRandomizePosition( true , 75000, 74000 )
+
+Blue_GroundTemplate = { "AI_M48", "AI_M6", "AI_LN M901" }
+Blue_GroundSpawner = SPAWN:New( "Blue_Ground" )
+:InitLimit( 20, 10 )
+:InitRandomizeTemplate(Blue_GroundTemplate)
 
 function EnemyAirplaneSpawnFunction ( playerGroup )
 	-- Let everyone know we are spawning enemy aircraft
@@ -82,26 +85,32 @@ function EnemyAircraftReportFunction( playerGroup )
 end
 
 function EnemyGroundSpawnFunction ( playerGroup )
-	-- Let everyone know we are spawning enemy ground unit
-	MESSAGE:New(playerGroup:GetPlayerName(), 25, "Spawning enemy ground unit for" ):ToAll()
-	
-	-- Find the player's position.
-	local playerPosition = POINT_VEC3:NewFromVec3(playerGroup:GetVec3())
-	--local y = math.random(500, 7000)
-	--playerPosition:SetY(y)
-	
+	-- Find a random location to spawn enemy unit.
+	local counter = 0
+	repeat
+		randomLocation = playerGroup:GetCoordinate():GetRandomVec2InRadius( 75000, 37000 )
+		counter = counter + 1
+
+		if (counter == 10) then -- If haven't found a good location in 10 tries notify and exit.
+			MESSAGE:New("Unable to find a suitable location to spawn enemy unit.", 25, "Spawn Failed" ):ToAll()
+			return
+		end	
+	until (land.getSurfaceType(randomLocation) == land.SurfaceType.LAND)
+
+	-- Depending on client coalition, spawn enemy ground unit.
 	local EnemyGround
-	-- Depending on client coalition, spawn enemy aircraft.
 	if (playerGroup:GetCoalition() == 1) then --Client is from the Red Coalition
-		EnemyGround = Blue_AirplaneSpawner:SpawnFromVec3( playerPosition )
+		EnemyGround = Blue_GroundSpawner:SpawnFromVec2( randomLocation )
 	elseif (playerGroup:GetCoalition() == 2) then -- Client is from the Blue Coalition
-		EnemyGround = Red_GroundSpawner:SpawnFromVec3( playerPosition ) 
+		EnemyGround = Red_GroundSpawner:SpawnFromVec2( randomLocation ) 
 	end
 	
-	-- Set spawned aircraft to attack player.
+	-- Set spawned ground unit to attack player and notify players.
 	if (EnemyGround) then
 		Task = EnemyGround:TaskAttackGroup( playerGroup )
 		EnemyGround:PushTask(Task, 5)
+
+		MESSAGE:New(playerGroup:GetPlayerName(), 25, "Spawning enemy ground unit for" ):ToAll()
 	end
 end
 
