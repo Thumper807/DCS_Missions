@@ -1,5 +1,8 @@
 
-MESSAGE:New( "This training mission is intended to spawn random enemy aircraft in random directions to defeat via the radio menu.", 25 ):ToAll()
+MESSAGE:New( "This training mission is intended to spawn random enemy air or ground units in random directions via the radio menu for you to defeat.", 25 ):ToAll()
+
+Scoring = SCORING:New( "ScoringObject" )
+ImperialSettings = _SETTINGS:SetImperial()
 
 Red_AirplaneTemplate = { "AI_Su-27", "AI_Su-33", "AI_Mig-23", "AI_Mig-29" }
 Red_AirplaneSpawner = SPAWN:New( "Red_Aircraft" )
@@ -76,12 +79,19 @@ function EnemyAircraftReportFunction( playerGroup )
 	end
 
 	local group, index = spawner:GetFirstAliveGroup()
-	while group ~= nil do
-		local detectedTargets = group:GetDetectedTargets()
-		local fuelQty = group:GetFuel()
-		MESSAGE:New( "Fuel Quantity: " .. tostring(fuelQty), 25, group:GetName()):ToAll()
-		group, index = spawner:GetNextAliveGroup( index )
+	if (group) then
+		local targets = group:GetDetectedTargets()
+		for k in pairs(targets) do
+			MESSAGE:New ("blah", 25, "Target" ):ToAll()
+--			print(k, v[1], v[2], v[3])
+		end
 	end
+--	while group ~= nil do
+--		local detectedTargets = group:GetDetectedTargets()
+--		local fuelQty = group:GetFuel()
+--		MESSAGE:New( "Fuel Quantity: " .. tostring(fuelQty), 25, group:GetName()):ToAll()
+--		group, index = spawner:GetNextAliveGroup( index )
+--	end
 end
 
 function EnemyGroundSpawnFunction ( playerGroup )
@@ -91,43 +101,82 @@ function EnemyGroundSpawnFunction ( playerGroup )
 		randomLocation = playerGroup:GetCoordinate():GetRandomVec2InRadius( 75000, 37000 )
 		counter = counter + 1
 
-		if (counter == 10) then -- If haven't found a good location in 10 tries notify and exit.
+		if (counter == 1000) then -- If haven't found a good location in 10 tries notify and exit.
 			MESSAGE:New("Unable to find a suitable location to spawn enemy unit.", 25, "Spawn Failed" ):ToAll()
 			return
 		end	
-	until (land.getSurfaceType(randomLocation) == land.SurfaceType.LAND)
+	until (land.getSurfaceType(randomLocation) == land.SurfaceType.ROAD) --LAND
 
 	-- Depending on client coalition, spawn enemy ground unit.
-	local EnemyGround
+	local enemyGround
 	if (playerGroup:GetCoalition() == 1) then --Client is from the Red Coalition
-		EnemyGround = Blue_GroundSpawner:SpawnFromVec2( randomLocation )
+		enemyGround = Blue_GroundSpawner:SpawnFromVec2( randomLocation )
 	elseif (playerGroup:GetCoalition() == 2) then -- Client is from the Blue Coalition
-		EnemyGround = Red_GroundSpawner:SpawnFromVec2( randomLocation ) 
+		enemyGround = Red_GroundSpawner:SpawnFromVec2( randomLocation ) 
 	end
 	
 	-- Set spawned ground unit to attack player and notify players.
-	if (EnemyGround) then
-		Task = EnemyGround:TaskAttackGroup( playerGroup )
-		EnemyGround:PushTask(Task, 5)
+	if (enemyGround) then
+--		local task = enemyGround:TaskAttackGroup( playerGroup )
+--		enemyGround:PushTask(task, 5)
 
+		--enemyGround:RouteGroundOnRoad(enemyGround:GetCoordinate(), 75, 5)
 		MESSAGE:New(playerGroup:GetPlayerName(), 25, "Spawning enemy ground unit for" ):ToAll()
 	end
+end
+
+function EnemyBearingFunction(playerGroup)
+	-- Depending on client coalition, grab the correct spawners.
+	local airSpawner
+	local groundSpawner
+	if (playerGroup:GetCoalition() == 1) then --Client is from the Red Coalition
+		airSpawner = Blue_AirplaneSpawner
+		groundSpawner = Blue_GroundSpawner
+	elseif (playerGroup:GetCoalition() == 2) then -- Client is from the Blue Coalition
+		airSpawner = Red_AirplaneSpawner
+		groundSpawner = Red_GroundSpawner
+	end
+
+	-- Provide BRA for first Enemy Air Unit or BR for first Enemy Ground Unit.
+	local enemyAirGroup = airSpawner:GetFirstAliveGroup()
+	local enemyGroundGroup = groundSpawner:GetFirstAliveGroup()
+	
+	if (enemyAirGroup) then
+		local enemyCoordinate = enemyAirGroup:GetCoordinate()
+		local playerCoordinate = playerGroup:GetCoordinate()
+		local braString = enemyCoordinate:ToStringBRA(playerCoordinate, ImperialSettings)
+		MESSAGE:New (enemyAirGroup:GetTypeName() .. ": " .. braString, 25):ToAll() -- .. 
+	elseif (enemyGroundGroup) then
+		local enemyCoordinate = enemyGroundGroup:GetCoordinate()
+		local playerCoordinate = playerGroup:GetCoordinate()
+		local brString = enemyCoordinate:ToStringBR(playerCoordinate, ImperialSettings)
+		MESSAGE:New (enemyGroundGroup:GetTypeName() .. ": " .. brString, 25):ToAll()
+	end
+end
+
+function ReportScore(playerGroup)
+	Scoring:ReportScoreGroupDetailed(playerGroup)
 end
 
 function AddRadioItems( groupName )
 	local group = GROUP:FindByName( groupName )
 	if group and group:IsAlive() then
 		MENU_GROUP_COMMAND:New( group, "Spawn Enemy Aircraft to Engage", nil, EnemyAirplaneSpawnFunction, group )
-		MENU_GROUP_COMMAND:New( group, "Delete Enemy Aircraft", nil, DeleteEnemyAircraftFunction, group )
-		MENU_GROUP_COMMAND:New( group, "Enemy Aircraft Report", nil, EnemyAircraftReportFunction, group )
+--		MENU_GROUP_COMMAND:New( group, "Delete Enemy Aircraft", nil, DeleteEnemyAircraftFunction, group )
+--		MENU_GROUP_COMMAND:New( group, "Enemy Aircraft Report", nil, EnemyAircraftReportFunction, group )
 		MENU_GROUP_COMMAND:New( group, "Spawn Enemy Ground Unit to Engage", nil, EnemyGroundSpawnFunction, group )
+		MENU_GROUP_COMMAND:New( group, "Bearing to Enemy", nil, EnemyBearingFunction, group )
+		MENU_GROUP_COMMAND:New( group, "Report Score", nil, ReportScore, group )
 	end
 end
 
 SCHEDULER:New( nil,
 function()
+	AddRadioItems( "Blue_A-10C_1_Client" )
+	AddRadioItems( "Blue_A-10C_2_Client" )
 	AddRadioItems( "Blue_AV-8B_Client" )
 	AddRadioItems( "Blue_F-15C_Client" )
+	AddRadioItems( "Blue_F-5E_Client" )
 	AddRadioItems( "Red_Su-27_Client" )
 end, {}, 1, 10 )
 
