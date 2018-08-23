@@ -10,16 +10,24 @@ Red_AirplaneSpawner = SPAWN:New( "Red_Aircraft" )
 :InitRandomizeTemplate(Red_AirplaneTemplate)
 :InitRandomizePosition( true , 75000, 37000 )
 
+Blue_AFACSpawner = SPAWN:New( "Blue_AFAC" )
+
 Blue_AirplaneTemplate = { "AI_AV-8B", "AI_F-14A", "AI_F-15C", "AI_F-16C" }
 Blue_AirplaneSpawner = SPAWN:New( "Blue_Aircraft" )
 :InitLimit( 20, 10 )
 :InitRandomizeTemplate(Blue_AirplaneTemplate)
 :InitRandomizePosition( true , 74000, 37000 )
 
-Red_GroundTemplate = { "AI_SA-19", "AI_ZU-23", "AI_SA-13", "AI_SA-15", "AI_SA-8", "AI_SA-9" }
+Red_GroundTemplate = { "AI_SA-19", "AI_ZU-23", "AI_SA-13", "AI_SA-15", "AI_SA-8", "AI_SA-9", "Red_Convoy_001" }
 Red_GroundSpawner = SPAWN:New( "Red_Ground" )
 :InitLimit( 20, 10 )
 :InitRandomizeTemplate(Red_GroundTemplate)
+:OnSpawnGroup(
+	function (SpawnGroup)
+		Blue_AFAC = Blue_AFACSpawner:SpawnFromVec2(SpawnGroup:GetVec2(), 6000)
+	end
+)
+
 
 Blue_GroundTemplate = { "AI_M48", "AI_M6", "AI_LN M901" }
 Blue_GroundSpawner = SPAWN:New( "Blue_Ground" )
@@ -27,9 +35,6 @@ Blue_GroundSpawner = SPAWN:New( "Blue_Ground" )
 :InitRandomizeTemplate(Blue_GroundTemplate)
 
 function EnemyAirplaneSpawnFunction ( playerGroup )
-	-- Let everyone know we are spawning enemy aircraft
-	MESSAGE:New(playerGroup:GetPlayerName(), 25, "Spawning enemy aircraft for" ):ToAll()
-	
 	-- Find the player's position.
 	-- NOTE: Since spawned aircraft uses player's altitude, randomizing the altitude.
 	local playerPosition = POINT_VEC3:NewFromVec3(playerGroup:GetVec3())
@@ -44,10 +49,12 @@ function EnemyAirplaneSpawnFunction ( playerGroup )
 		EnemyAircraft = Red_AirplaneSpawner:SpawnFromVec3( playerPosition ) 
 	end
 	
-	-- Set spawned aircraft to attack player.
+	-- Set spawned aircraft to attack and notify players.
 	if (EnemyAircraft) then
 		Task = EnemyAircraft:TaskAttackGroup( playerGroup )
 		EnemyAircraft:PushTask(Task, 5)
+		MESSAGE:New(playerGroup:GetPlayerName(), 25, "Spawning enemy aircraft for" ):ToAll()
+		EnemyBearingFunction(playerGroup)
 	end
 end
 
@@ -94,38 +101,57 @@ function EnemyAircraftReportFunction( playerGroup )
 --	end
 end
 
+
+
 function EnemyGroundSpawnFunction ( playerGroup )
 	-- Find a random location to spawn enemy unit.
 	local counter = 0
+	local enemyLocation
+	local roadLocation
+	
 	repeat
-		randomLocation = playerGroup:GetCoordinate():GetRandomVec2InRadius( 75000, 37000 )
+		enemyLocation = playerGroup:GetCoordinate():GetRandomVec2InRadius( 75000, 37000 )
+		local enemyCoordinate = COORDINATE:NewFromVec2(enemyLocation)
+		roadLocation = enemyCoordinate:GetClosestPointToRoad()
+		local distanceToRoad = enemyCoordinate:Get2DDistance(roadLocation)
+		
 		counter = counter + 1
 
-		if (counter == 1000) then -- If haven't found a good location in 10 tries notify and exit.
+		if (counter == 1000) then -- If haven't found a good location in xxx tries notify and exit.
 			MESSAGE:New("Unable to find a suitable location to spawn enemy unit.", 25, "Spawn Failed" ):ToAll()
 			return
 		end	
-	until (land.getSurfaceType(randomLocation) == land.SurfaceType.ROAD) --LAND
+	until (land.getSurfaceType(enemyLocation) == land.SurfaceType.LAND and distanceToRoad < 500)
 
 	-- Depending on client coalition, spawn enemy ground unit.
-	local enemyGround
+	enemyGround = nil
 	if (playerGroup:GetCoalition() == 1) then --Client is from the Red Coalition
-		enemyGround = Blue_GroundSpawner:SpawnFromVec2( randomLocation )
+		enemyGround = Blue_GroundSpawner:SpawnFromVec2( enemyLocation )
 	elseif (playerGroup:GetCoalition() == 2) then -- Client is from the Blue Coalition
-		enemyGround = Red_GroundSpawner:SpawnFromVec2( randomLocation ) 
+		enemyGround = Red_GroundSpawner:SpawnFromVec2( enemyLocation ) 
 	end
 	
-	-- Set spawned ground unit to attack player and notify players.
+	-- Set spawned ground unit to move to road, create an AFAC unit to help player locate target and notify players.
 	if (enemyGround) then
---		local task = enemyGround:TaskAttackGroup( playerGroup )
---		enemyGround:PushTask(task, 5)
-
-		--enemyGround:RouteGroundOnRoad(enemyGround:GetCoordinate(), 75, 5)
+		enemyGround:HandleEvent( EVENTS.Dead )
+		function enemyGround:OnEventDead( EventData )
+			if (EventData.IniGroup:GetSize() <= 1 and Blue_AFAC) then
+				SCHEDULER:New( nil,
+				function()
+					if (Blue_AFAC) then
+						Blue_AFAC:Destroy()
+					end
+				end, {}, 10 )
+			end
+		end
+		
+		enemyGround:RouteGroundOnRoad(roadLocation, 75, 5)
 		MESSAGE:New(playerGroup:GetPlayerName(), 25, "Spawning enemy ground unit for" ):ToAll()
+		EnemyBearingFunction(playerGroup)
 	end
 end
 
-function EnemyBearingFunction(playerGroup)
+function EnemyBearingFunction( playerGroup )
 	-- Depending on client coalition, grab the correct spawners.
 	local airSpawner
 	local groundSpawner
@@ -138,8 +164,8 @@ function EnemyBearingFunction(playerGroup)
 	end
 
 	-- Provide BRA for first Enemy Air Unit or BR for first Enemy Ground Unit.
-	local enemyAirGroup = airSpawner:GetFirstAliveGroup()
-	local enemyGroundGroup = groundSpawner:GetFirstAliveGroup()
+	local enemyAirGroup, i = airSpawner:GetFirstAliveGroup() --GetLastAliveGroup()
+	local enemyGroundGroup, j = groundSpawner:GetFirstAliveGroup() --GetLastAliveGroup()
 	
 	if (enemyAirGroup) then
 		local enemyCoordinate = enemyAirGroup:GetCoordinate()
@@ -154,9 +180,28 @@ function EnemyBearingFunction(playerGroup)
 	end
 end
 
+function MarkGroundTargetFunction(playerGroup)
+	if (playerGroup:GetCoalition() == 1) then --Client is from the Red Coalition
+		groundSpawner = Blue_GroundSpawner
+	elseif (playerGroup:GetCoalition() == 2) then -- Client is from the Blue Coalition
+		groundSpawner = Red_GroundSpawner
+	end
+
+	-- Lay down smoke for Enemy Ground Target
+	local enemyGroundGroup = groundSpawner:GetFirstAliveGroup()
+	if (enemyGroundGroup) then
+		local enemyCoordinate = enemyGroundGroup:GetCoordinate()
+		enemyCoordinate:SmokeOrange()
+		enemyCoordinate:Explosion(10)
+		MESSAGE:New ("Ground target has been smoked", 25):ToAll()
+	end
+
+end
+
 function ReportScore(playerGroup)
 	Scoring:ReportScoreGroupDetailed(playerGroup)
 end
+
 
 function AddRadioItems( groupName )
 	local group = GROUP:FindByName( groupName )
@@ -166,6 +211,7 @@ function AddRadioItems( groupName )
 --		MENU_GROUP_COMMAND:New( group, "Enemy Aircraft Report", nil, EnemyAircraftReportFunction, group )
 		MENU_GROUP_COMMAND:New( group, "Spawn Enemy Ground Unit to Engage", nil, EnemyGroundSpawnFunction, group )
 		MENU_GROUP_COMMAND:New( group, "Bearing to Enemy", nil, EnemyBearingFunction, group )
+		MENU_GROUP_COMMAND:New( group, "Mark Ground Target with Smoke", nil, MarkGroundTargetFunction, group )
 		MENU_GROUP_COMMAND:New( group, "Report Score", nil, ReportScore, group )
 	end
 end
@@ -179,4 +225,5 @@ function()
 	AddRadioItems( "Blue_F-5E_Client" )
 	AddRadioItems( "Red_Su-27_Client" )
 end, {}, 1, 10 )
+
 
