@@ -6,25 +6,28 @@ ImperialSettings = _SETTINGS:SetImperial()
 
 Red_AirplaneTemplate = { "AI_Su-27", "AI_Su-33", "AI_Mig-23", "AI_Mig-29" }
 Red_AirplaneSpawner = SPAWN:New( "Red_Aircraft" )
-:InitLimit( 20, 10 )
 :InitRandomizeTemplate(Red_AirplaneTemplate)
 :InitRandomizePosition( true , 75000, 37000 )
 
 Blue_AFACSpawner = SPAWN:New( "Blue_AFAC" )
+--:InitRandomizePosition( true , 2000, 1000 )
 
 Blue_AirplaneTemplate = { "AI_AV-8B", "AI_F-14A", "AI_F-15C", "AI_F-16C" }
 Blue_AirplaneSpawner = SPAWN:New( "Blue_Aircraft" )
-:InitLimit( 20, 10 )
 :InitRandomizeTemplate(Blue_AirplaneTemplate)
 :InitRandomizePosition( true , 74000, 37000 )
 
 Red_GroundTemplate = { "AI_SA-19", "AI_ZU-23", "AI_SA-13", "AI_SA-15", "AI_SA-8", "AI_SA-9", "Red_Convoy_001" }
 Red_GroundSpawner = SPAWN:New( "Red_Ground" )
-:InitLimit( 20, 10 )
 :InitRandomizeTemplate(Red_GroundTemplate)
 :OnSpawnGroup(
 	function (SpawnGroup)
-		Blue_AFAC = Blue_AFACSpawner:SpawnFromVec2(SpawnGroup:GetVec2(), 6000)
+	if (Blue_AFAC) then
+			Blue_AFAC:Destroy()
+		end
+		Blue_AFAC = Blue_AFACSpawner:SpawnFromVec2(SpawnGroup:GetVec2(), 4000)
+		facTask = Blue_AFAC:TaskFAC_AttackGroup( SpawnGroup )
+		Blue_AFAC:PushTask( facTask )
 	end
 )
 
@@ -110,7 +113,7 @@ function EnemyGroundSpawnFunction ( playerGroup )
 	local roadLocation
 	
 	repeat
-		enemyLocation = playerGroup:GetCoordinate():GetRandomVec2InRadius( 75000, 37000 )
+		enemyLocation = playerGroup:GetCoordinate():GetRandomVec2InRadius( 25000, 15000 )
 		local enemyCoordinate = COORDINATE:NewFromVec2(enemyLocation)
 		roadLocation = enemyCoordinate:GetClosestPointToRoad()
 		local distanceToRoad = enemyCoordinate:Get2DDistance(roadLocation)
