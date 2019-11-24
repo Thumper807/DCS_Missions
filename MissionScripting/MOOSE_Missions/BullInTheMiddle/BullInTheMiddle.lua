@@ -12,7 +12,7 @@ Red_AirplaneSpawner = SPAWN:New( "Red_Aircraft" )
 Blue_AFACSpawner = SPAWN:New( "Blue_AFAC" )
 --:InitRandomizePosition( true , 2000, 1000 )
 
-Blue_AirplaneTemplate = { "AI_AV-8B", "AI_F-14A", "AI_F-15C", "AI_F-16C" }
+Blue_AirplaneTemplate = { "AI_AV-8B", "AI_F-14B", "AI_F-15C", "AI_F-16C" }
 Blue_AirplaneSpawner = SPAWN:New( "Blue_Aircraft" )
 :InitRandomizeTemplate(Blue_AirplaneTemplate)
 :InitRandomizePosition( true , 74000, 37000 )
@@ -195,7 +195,7 @@ function MarkGroundTargetFunction(playerGroup)
 	if (enemyGroundGroup) then
 		local enemyCoordinate = enemyGroundGroup:GetCoordinate()
 		enemyCoordinate:SmokeOrange()
-		enemyCoordinate:Explosion(10)
+		--enemyCoordinate:Explosion(10)
 		MESSAGE:New ("Ground target has been smoked", 25):ToAll()
 	end
 
@@ -208,7 +208,7 @@ end
 
 function AddRadioItems( groupName )
 	local group = GROUP:FindByName( groupName )
-	if group and group:IsAlive() then
+	if group then -- and group:IsAlive() then
 		MENU_GROUP_COMMAND:New( group, "Spawn Enemy Aircraft to Engage", nil, EnemyAirplaneSpawnFunction, group )
 --		MENU_GROUP_COMMAND:New( group, "Delete Enemy Aircraft", nil, DeleteEnemyAircraftFunction, group )
 --		MENU_GROUP_COMMAND:New( group, "Enemy Aircraft Report", nil, EnemyAircraftReportFunction, group )
@@ -226,6 +226,16 @@ function()
 	AddRadioItems( "Blue_AV-8B_Client" )
 	AddRadioItems( "Blue_F-15C_Client" )
 	AddRadioItems( "Blue_F-5E_Client" )
+	AddRadioItems( "Blue_M-2000_Client" )
+	AddRadioItems( "Blue_F/A-18C_1_Client" )
+	AddRadioItems( "Blue_F/A-18C_2_Client" )
+	AddRadioItems( "Blue_F/A-18C_3_Client" )
+	AddRadioItems( "Blue_F/A-18C_4_Client" )
+	AddRadioItems( "Blue_F-14B_1_Client" )
+	AddRadioItems( "Blue_F-14B_2_Client" )
+	AddRadioItems( "Blue_F-14B_3_Client" )
+	AddRadioItems( "Blue_F-14B_4_Client" )
+	AddRadioItems( "Blue_F-16C_Client" )
 	AddRadioItems( "Red_Su-27_Client" )
 end, {}, 1, 10 )
 

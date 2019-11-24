@@ -28129,7 +28129,7 @@ function GROUP:IsAlive()
     if DCSGroup:isExist() then
       local DCSUnit = DCSGroup:getUnit(1) -- Dcs.DCSUnit#Unit
       if DCSUnit then
-        local GroupIsAlive = DCSUnit:isActive()
+        local GroupIsAlive = DCSUnit:isActive()/
         self:T3( GroupIsAlive )
         return GroupIsAlive
       end
